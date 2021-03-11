@@ -12,9 +12,13 @@ import api from '../api/api';
 function ProductList() {
 	const [products, setProducts] = useState([]);
 	const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
+	const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false);
 	const [loading, setLoading] = useState(true);
 	const [newProductName, setNewProductName] = useState('');
 	const [newSupplierName, setNewSupplierName] = useState('');
+	const [productObj, setProductObj] = useState({});
+	const [isCreate, setIsCreate] = useState(true);
+
 	// retrieve Products
 	const retrieveProducts = async () => {
 		const resp = await api.get('/products');
@@ -29,25 +33,34 @@ function ProductList() {
 		getAllProducts();
 	}, []);
 
-	const addNewProduct = async (product) => {
-		debugger;
-		console.log('product', product);
-		const request = {
-			...product,
-		};
-		const resp = await api.post('/products', request);
+	const addNewProduct = async () => {
+		const newItem = { productName: newProductName, supplierName: newSupplierName, supplierId: Date.now() };
+		console.log('product', newItem);
+		const resp = await api.post('/products', newItem);
 
-		setProducts([...products, resp.data]);
+		setProducts([...products, newItem]);
 	};
 
-	const onDeleteProduct = (id) => {
-		const fetchItems = async () => {
-			const resp = await fetch('http://localhost:4000/product');
-			const data = resp.json();
-			console.log('data', data);
-			data.filter((x) => x.id !== id);
-		};
+	const updateProduct = async () => {
+		// const initItem = { productName: newProductName, supplierName: newSupplierName };
+		// const resp = await api.put(`/product/${id}`, initItem);
+		// console.log(resp.data);
 	};
+
+	const onDeleteProduct = async (id) => {
+		const resp = await api.delete(`/products/${id}`);
+		const newList = products.filter((x) => x.id !== id);
+		setProducts(newList);
+	};
+
+	// const getProductById = async (id) => {
+	// 	const resp = await api.get(`/products/${id}`);
+	// 	if (resp) {
+	// 		setProductObj(resp.data);
+	// 		isShowCreateModal();
+	// 		setIsCreate(false);
+	// 	}
+	// };
 
 	const columns = [
 		{
@@ -74,7 +87,7 @@ function ProductList() {
 							Thêm
 						</Button> */}
 						<Button type="primary">Chi tiết</Button>
-						<Button>Sửa</Button>
+						<Button onClick={() => isShowUpdateModal(record.id)}>Sửa</Button>
 						<Button type="danger" onClick={() => onDeleteProduct(record.id)}>
 							Xóa
 						</Button>
@@ -105,6 +118,10 @@ function ProductList() {
 	const isShowCreateModal = () => {
 		setIsCreateModalVisible(true);
 	};
+	const onShowCreate = () => {
+		isShowCreateModal();
+		setIsCreate(true);
+	};
 
 	const handleOk = () => {
 		setIsCreateModalVisible(false);
@@ -112,6 +129,20 @@ function ProductList() {
 
 	const handleCancel = () => {
 		setIsCreateModalVisible(false);
+	};
+	//update product
+	const isShowUpdateModal = async (id) => {
+		const resp = await api.get(`/products/${id}`);
+		setProductObj(resp.data);
+		setIsUpdateModalVisible(true);
+	};
+
+	const handleOkUpdate = () => {
+		setIsUpdateModalVisible(false);
+	};
+
+	const handleCancelUpdate = () => {
+		setIsUpdateModalVisible(false);
 	};
 
 	// const handleCreateNewProduct = () => {
@@ -142,8 +173,38 @@ function ProductList() {
 					<Form.Item label="Nhà sản xuất" name="supplierName">
 						<Input onChange={(e) => setNewSupplierName(e.target.value)} />
 					</Form.Item>
+
 					<Form.Item>
 						<Button type="primary" onClick={addNewProduct}>
+							Thêm
+						</Button>
+					</Form.Item>
+				</Form>
+			</Modal>
+
+			<Modal
+				title="Basic Modal"
+				visible={isUpdateModalVisible}
+				onOk={handleOkUpdate}
+				onCancel={handleCancelUpdate}
+				footer={null}
+			>
+				<Form>
+					<Form.Item label="Tên sản phẩm" name="productName">
+						<Input
+							defaultValue={productObj.productName}
+							onChange={(e) => setNewProductName(e.target.value)}
+						/>
+					</Form.Item>
+					<Form.Item label="Nhà sản xuất" name="supplierName">
+						<Input
+							defaultValue={productObj.supplierName}
+							onChange={(e) => setNewSupplierName(e.target.value)}
+						/>
+					</Form.Item>
+
+					<Form.Item>
+						<Button type="primary" onClick={updateProduct}>
 							Lưu
 						</Button>
 					</Form.Item>
