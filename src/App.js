@@ -1,14 +1,11 @@
-import React, { useEffect } from 'react';
+import 'antd/dist/antd.css';
+import React from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './App.css';
 import Nav from './components/Nav/Nav';
 import ProductList from './components/ProductList/ProductList';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import Shop from './components/Shop/Shop';
 import Item from './components/Shop/ItemDetail';
-
-import Highlighter from 'react-highlight-words';
-import { Button } from 'antd';
-import 'antd/dist/antd.css';
+import Shop from './components/Shop/Shop';
 
 function App() {
 	return (

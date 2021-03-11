@@ -22,4 +22,9 @@ nav{
       display: flex;
     justify-content: space-around;
 }
-
+.btn-add{
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 1rem;
+}

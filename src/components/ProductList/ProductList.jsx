@@ -1,45 +1,52 @@
 import React, { useState, useEffect } from 'react';
 import '../../App.css';
-import { Table, Input, Button, Space } from 'antd';
+import { Table, Input, Button, Space, Form } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import Axios from 'axios';
 import 'antd/dist/antd.css';
+import Modal from 'antd/lib/modal/Modal';
+// import mockData from  '../../../db.json';
+import { NewProduct } from './product.models';
+import api from '../api/api';
 
 function ProductList() {
 	const [products, setProducts] = useState([]);
+	const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
 	const [loading, setLoading] = useState(true);
+	const [newProductName, setNewProductName] = useState('');
+	const [newSupplierName, setNewSupplierName] = useState('');
+	// retrieve Products
+	const retrieveProducts = async () => {
+		const resp = await api.get('/products');
+		return resp.data;
+	};
 	useEffect(() => {
-		getData();
+		// getData();
+		const getAllProducts = async () => {
+			const allProducts = await retrieveProducts();
+			if (allProducts) setProducts(allProducts);
+		};
+		getAllProducts();
 	}, []);
 
-	const getData = async () => {
-		await Axios.get('http://localhost:4000/productList').then((resp) => {
-			setLoading(false);
-			setProducts(
-				resp.data.map((row) => ({
-					productName: row.productName,
-					supplierName: row.supplierName,
-					productId: row.productId,
-					supplierId: row.supplierId,
-				}))
-			);
-		});
-	};
+	const addNewProduct = async (product) => {
+		debugger;
+		console.log('product', product);
+		const request = {
+			...product,
+		};
+		const resp = await api.post('/products', request);
 
-	// const productList = async () => {
-	// 	const fetchItems = async () => {
-	// 		const data = await fetch('http://localhost:4000/productList');
-	// 		console.log(data);
-	// 	};
-	// };
+		setProducts([...products, resp.data]);
+	};
 
 	const onDeleteProduct = (id) => {
 		const fetchItems = async () => {
-			const resp = await fetch('http://localhost:4000/productList');
+			const resp = await fetch('http://localhost:4000/product');
 			const data = resp.json();
 			console.log('data', data);
+			data.filter((x) => x.id !== id);
 		};
-		console.log(id);
 	};
 
 	const columns = [
@@ -63,9 +70,12 @@ function ProductList() {
 			render: (_value, record) => {
 				return (
 					<div className="site-button-ghost-wrapper">
+						{/* <Button type="primary" onClick={isShowCreateModal}>
+							Thêm
+						</Button> */}
 						<Button type="primary">Chi tiết</Button>
 						<Button>Sửa</Button>
-						<Button type="danger" onClick={() => onDeleteProduct(record.productId)}>
+						<Button type="danger" onClick={() => onDeleteProduct(record.id)}>
 							Xóa
 						</Button>
 					</div>
@@ -92,11 +102,53 @@ function ProductList() {
 		},
 	};
 
+	const isShowCreateModal = () => {
+		setIsCreateModalVisible(true);
+	};
+
+	const handleOk = () => {
+		setIsCreateModalVisible(false);
+	};
+
+	const handleCancel = () => {
+		setIsCreateModalVisible(false);
+	};
+
+	// const handleCreateNewProduct = () => {
+	// 	setIsCreateModalVisible(false);
+	// };
+
 	return (
 		<div>
 			<h1>Product List</h1>
+			<div className="btn-add">
+				<Button type="primary" onClick={isShowCreateModal}>
+					Thêm sản phẩm
+				</Button>
+			</div>
+			<Table rowSelection={rowSelection} columns={columns} dataSource={products} dataIndex="id" />
 
-			<Table rowSelection={rowSelection} columns={columns} dataSource={products} dataIndex="productId" />
+			<Modal
+				title="Basic Modal"
+				visible={isCreateModalVisible}
+				onOk={handleOk}
+				onCancel={handleCancel}
+				footer={null}
+			>
+				<Form>
+					<Form.Item label="Tên sản phẩm" name="productName">
+						<Input onChange={(e) => setNewProductName(e.target.value)} />
+					</Form.Item>
+					<Form.Item label="Nhà sản xuất" name="supplierName">
+						<Input onChange={(e) => setNewSupplierName(e.target.value)} />
+					</Form.Item>
+					<Form.Item>
+						<Button type="primary" onClick={addNewProduct}>
+							Lưu
+						</Button>
+					</Form.Item>
+				</Form>
+			</Modal>
 		</div>
 	);
 }
