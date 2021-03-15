@@ -1,22 +1,10 @@
 {
   "products": [
     {
-      "id": 4,
-      "productName": "Aristotle Webster",
-      "supplierName": "Senectus Et Netus Consulting",
-      "supplierId": "63370"
-    },
-    {
       "id": 5,
-      "productName": "Christopher Roberts",
-      "supplierName": "Morbi Vehicula LLC",
-      "supplierId": "12944"
-    },
-    {
-      "id": 6,
-      "productName": "Honorato Pollard",
-      "supplierName": "Ante Associates",
-      "supplierId": "35078"
+      "productName": "hihi",
+      "supplierName": "hihi",
+      "supplierId": "16974461"
     },
     {
       "id": 7,
@@ -35,12 +23,6 @@
       "productName": "Stephen Sanders",
       "supplierName": "Ridiculus Mus LLC",
       "supplierId": "56503"
-    },
-    {
-      "id": 10,
-      "productName": "Tyler Buck",
-      "supplierName": "Nunc LLC",
-      "supplierId": "74786"
     },
     {
       "id": 11,
@@ -565,28 +547,10 @@
       "id": 103
     },
     {
-      "productName": "Christopher Robert",
-      "supplierName": "",
-      "supplierId": 1615481333564,
-      "id": 104
-    },
-    {
-      "productName": "",
-      "supplierName": "",
-      "supplierId": 1615483947444,
-      "id": 105
-    },
-    {
-      "productName": "dfds",
-      "supplierName": "sdfds",
-      "supplierId": 1615483956597,
-      "id": 106
-    },
-    {
-      "productName": "hihi",
-      "supplierName": "hihi",
-      "supplierId": 1615483972716,
-      "id": 107
+      "productName": "hello",
+      "supplierName": "hello",
+      "supplierId": 1615522932002,
+      "id": 109
     }
   ]
 }

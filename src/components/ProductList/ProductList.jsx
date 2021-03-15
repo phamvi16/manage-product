@@ -39,18 +39,21 @@ function ProductList() {
 		const resp = await api.post('/products', newItem);
 
 		setProducts([...products, newItem]);
+		setIsCreateModalVisible(false);
 	};
 
 	const updateProduct = async () => {
 		// const initItem = { productName: newProductName, supplierName: newSupplierName };
 		// const resp = await api.put(`/product/${id}`, initItem);
-		// console.log(resp.data);
+		// console.log(resp);
+		// console.log(id);
 	};
 
 	const onDeleteProduct = async (id) => {
 		const resp = await api.delete(`/products/${id}`);
 		const newList = products.filter((x) => x.id !== id);
 		setProducts(newList);
+		console.log(id);
 	};
 
 	// const getProductById = async (id) => {
@@ -132,6 +135,8 @@ function ProductList() {
 	};
 	//update product
 	const isShowUpdateModal = async (id) => {
+		debugger;
+		console.log('id update', id);
 		const resp = await api.get(`/products/${id}`);
 		setProductObj(resp.data);
 		setIsUpdateModalVisible(true);
@@ -197,10 +202,7 @@ function ProductList() {
 						/>
 					</Form.Item>
 					<Form.Item label="Nhà sản xuất" name="supplierName">
-						<Input
-							defaultValue={productObj.supplierName}
-							onChange={(e) => setNewSupplierName(e.target.value)}
-						/>
+						<Input value={productObj.supplierName} onChange={(e) => setNewSupplierName(e.target.value)} />
 					</Form.Item>
 
 					<Form.Item>
